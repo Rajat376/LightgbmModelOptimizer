@@ -1,0 +1,16 @@
+[project]
+
+description = "Trained Lightgbm Model Optimizer. Reduce size and improve inference time of the trained lightgbm model"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Rajat Goyal", email = "rajatgoyal376@gmail.com"}
+]
+maintainers = [
+    {name = "Paras Malik", email = "paras.mal@media.net"}
+]
+name = "LightGBMModelOptimizer"
+readme = "README.md"
+requires-python = ">=3"
+version = "0.0.6"
+
+
