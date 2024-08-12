@@ -6,6 +6,9 @@ setup(
     description='Reduce size and improve inference time of the trained lightgbm model',
     readme = "README.md",
     packages=find_packages(),
+    install_requires=[
+        'lightgbm>=3.0.0,<=4.4.0',  # This allows any version within the specified range
+    ],
     classifiers = [
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

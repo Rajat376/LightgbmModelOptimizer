@@ -1,2 +1,2 @@
-from .optimizer import *
+from .optimizer import Optimizer
 
