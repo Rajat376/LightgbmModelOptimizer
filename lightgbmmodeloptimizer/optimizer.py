@@ -5,11 +5,8 @@ from ._tree import _Tree
 
 
 class Optimizer:
-    def __init__(self, pool_size=-1):
-        self.pool_size = pool_size
-        if pool_size == -1:
-            from multiprocessing import cpu_count
-            self.pool_size = cpu_count()
+    def __init__(self):
+        pass
 
     @staticmethod
     def get_trees_and_other_info(file: StringFileReader):
@@ -127,19 +124,9 @@ class Optimizer:
     def get_optimized_model_string_from_file_reader(self, file:StringFileReader) -> str:
         trees, cat_ids, pandas_categorical, num_feature = self.get_trees_and_other_info(file)
         file.reset()
-        if self.pool_size == 1:
-            results = [self.get_used_feat_val_map(x) for x in trees]
-        else:
-            from multiprocessing import Pool
-            with Pool(self.pool_size) as p:
-                results = p.map(self.get_used_feat_val_map, trees)
+        results = [self.get_used_feat_val_map(x) for x in trees]
         feature_id_mappings = self.get_feature_id_mappings(results, num_feature)
-        if self.pool_size == 1:
-            trees = [self.get_optimized_tree_string(x[0], x[1]) for x in [(tree, feature_id_mappings) for tree in trees]]
-        else:
-            from multiprocessing import Pool
-            with Pool(self.pool_size) as p:
-                trees = p.starmap(self.get_optimized_tree_string, [(tree, feature_id_mappings) for tree in trees])
+        trees = [self.get_optimized_tree_string(x[0], x[1]) for x in [(tree, feature_id_mappings) for tree in trees]]
         new_pandas_cat = self.get_modified_pandas_categorical(pandas_categorical, cat_ids, feature_id_mappings)
         optimized_model_str = self.get_optimized_model_string(trees, file, new_pandas_cat)
         return optimized_model_str

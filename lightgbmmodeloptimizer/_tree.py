@@ -11,7 +11,7 @@ class _Tree:
         self.decision_type = decision_type
         self.cat_threshold = cat_threshold
         self.num_feature = num_feature
-        self.are_elements_extracted = False
+        self.extract_tree_elements_from_model_string()
 
     def extract_tree_elements_from_model_string(self):
         self.split_feature = [int(x) for x in self.split_feature.split("=")[1].split(" ")]
@@ -20,7 +20,6 @@ class _Tree:
         self.decision_type = [int(x) for x in self.decision_type.split("=")[1].split(" ")]
         self.cat_threshold = [int(x) for x in self.cat_threshold.split("=")[1].split(" ")]
         self.index = int(self.index.strip().split("=")[1])
-        self.are_elements_extracted = True
 
     @staticmethod
     def is_decision_categorical(decision_type) -> bool:
@@ -30,8 +29,6 @@ class _Tree:
             return False
 
     def get_used_feat_val_map(self) -> [[]]:
-        if not self.are_elements_extracted:
-            self.extract_tree_elements_from_model_string()
         used_feat_indices = [[] for _ in range(self.num_feature)]
         for node_index, decision_type in enumerate(self.decision_type):
             if self.is_decision_categorical(decision_type):
@@ -46,8 +43,6 @@ class _Tree:
         return used_feat_indices
 
     def get_optimized_tree_string(self, feat_val_mappings):
-        if not self.are_elements_extracted:
-            self.extract_tree_elements_from_model_string()
         self.new_cat_boundaries = [0]
         self.new_cat_threshold = []
         for node_index, decision_type in enumerate(self.decision_type):
