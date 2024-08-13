@@ -154,7 +154,9 @@ class Optimizer:
         optimized_booster = Booster(model_str=optimized_model_str)
         return optimized_booster
 
-    def optimize_model_file(self, source_path: str, destination_path: str) -> None:
+    def optimize_model_file(self, source_path: str, destination_path: str = None) -> None:
+        if destination_path is None:
+            destination_path = source_path
         model_file = open(source_path, 'r')
         model_file_reader = StringFileReader(model_file.read())
         optimized_model_str = self.get_optimized_model_string_from_file_reader(model_file_reader)
