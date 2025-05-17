@@ -1,7 +1,9 @@
 .idea/*
 **/__pycache__/
 ./venv
-./LightGBMModelOptimizer.egg-info
-./build
+LightGBMModelOptimizer.egg-info
+build
 ./dump.rdb
-./tests
+tests
+venv11
+.DS_Store
