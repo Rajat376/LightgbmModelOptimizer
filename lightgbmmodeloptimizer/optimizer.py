@@ -127,6 +127,7 @@ class Optimizer:
             with Pool(self.pool_size) as p:
                 results=p.map(self.process_data,trees)
         feature_id_mappings=self.get_feature_id_mappings(results,num_feature)
+        del results
         if self.pool_size == 1:
             trees =[self.post_process(x[0], x[1]) for x in [(tree,feature_id_mappings) for tree in trees]]
         else:
@@ -134,7 +135,9 @@ class Optimizer:
             with Pool(self.pool_size) as p:
                 trees =p.starmap(self.post_process,[(tree,feature_id_mappings) for tree in trees])
         new_pandas_cat=self.get_modified_pandas_categorical(pandas_categorical,cat_ids,feature_id_mappings)
+        del feature_id_mappings, cat_ids, pandas_categorical
         optimized_model_str=self.get_optimized_model_string(trees,model_str,new_pandas_cat)
+        del trees, new_pandas_cat
         return optimized_model_str
 
     def optimize_booster(self,raw_model:Booster)->Booster:
@@ -144,8 +147,8 @@ class Optimizer:
         return optimized_booster
 
     def optimize_model_file(self,model_path:str)->None:
-        model_file=open(model_path,'r')
-        model_file = StringFileReader(model_file.read())
+        with open(model_path,'r') as f:
+            model_file=StringFileReader(f.read())
         trees,cat_ids,pandas_categorical,num_feature=self.get_trees_and_other_info(model_file)
         model_file.reset()
         if self.pool_size == 1:
@@ -155,6 +158,7 @@ class Optimizer:
             with Pool(self.pool_size) as p:
                 results=p.map(self.process_data,trees)
         feature_id_mappings=self.get_feature_id_mappings(results,num_feature)
+        del results
         if self.pool_size == 1:
             trees =[self.post_process(x[0], x[1]) for x in [(tree,feature_id_mappings) for tree in trees]]
         else:
@@ -162,6 +166,8 @@ class Optimizer:
             with Pool(self.pool_size) as p:
                 trees =p.starmap(self.post_process,[(tree,feature_id_mappings) for tree in trees])
         new_pandas_cat=self.get_modified_pandas_categorical(pandas_categorical,cat_ids,feature_id_mappings)
+        del feature_id_mappings, cat_ids, pandas_categorical
         optimized_model_str=self.get_optimized_model_string(trees,model_file,new_pandas_cat)
-        with open(model_path,'w')as file:
+        del model_file, trees, new_pandas_cat
+        with open(model_path,'w') as file:
             file.write(optimized_model_str)
