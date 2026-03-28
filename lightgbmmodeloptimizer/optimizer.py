@@ -143,7 +143,9 @@ class Optimizer:
     def optimize_booster(self,raw_model:Booster)->Booster:
         model_str=raw_model.model_to_string()
         optimized_model_str=self.optimize_model_string(model_str)
+        del model_str
         optimized_booster=Booster(model_str=optimized_model_str)
+        del optimized_model_str
         return optimized_booster
 
     def optimize_model_file(self,model_path:str)->None:
