@@ -118,6 +118,7 @@ class Optimizer:
         return tree
     def optimize_model_string(self,model_str:str)->str:
         model_str=StringFileReader(model_str)
+        del model_str
         trees,cat_ids,pandas_categorical,num_feature=self.get_trees_and_other_info(model_str)
         model_str.reset()
         if self.pool_size == 1:
@@ -141,17 +142,13 @@ class Optimizer:
         return optimized_model_str
 
     def optimize_booster(self,raw_model:Booster)->Booster:
-        model_str=raw_model.model_to_string()
-        optimized_model_str=self.optimize_model_string(model_str)
-        del model_str
+        optimized_model_str=self.optimize_model_string(raw_model.model_to_string())
         optimized_booster=Booster(model_str=optimized_model_str)
         del optimized_model_str
         return optimized_booster
 
     def optimize_model_file(self,model_path:str)->None:
         with open(model_path,'r') as f:
-            model_str=f.read()
-        optimized=self.optimize_model_string(model_str)
-        del model_str
+            optimized=self.optimize_model_string(f.read())
         with open(model_path,'w') as f:
             f.write(optimized)
