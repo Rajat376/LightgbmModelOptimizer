@@ -118,7 +118,6 @@ class Optimizer:
         return tree
     def optimize_model_string(self,model_str:str)->str:
         model_str=StringFileReader(model_str)
-        del model_str
         trees,cat_ids,pandas_categorical,num_feature=self.get_trees_and_other_info(model_str)
         model_str.reset()
         if self.pool_size == 1:
