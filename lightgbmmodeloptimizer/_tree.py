@@ -13,9 +13,11 @@ class _Tree:
     def preprocess(self):
         self.split_feature=[int(x) for x in self.split_feature.split("=")[1].split(" ")]
         self.threshold=[float(x) for x in self.threshold.split("=")[1].split(" ")]
-        self.cat_boundaries=[int(x) for x in self.cat_boundaries.split("=")[1].split(" ")]
+        if self.cat_boundaries is not  None:
+            self.cat_boundaries=[int(x) for x in self.cat_boundaries.split("=")[1].split(" ")]
         self.decision_type=[int(x) for x in self.decision_type.split("=")[1].split(" ")]
-        self.cat_threshold=[int(x) for x in self.cat_threshold.split("=")[1].split(" ")]
+        if self.cat_threshold is not None:
+            self.cat_threshold=[int(x) for x in self.cat_threshold.split("=")[1].split(" ")]
         self.index=int(self.index.strip().split("=")[1])
 
     def isDecisionCategorical(self,decision_type)->bool:
@@ -64,5 +66,7 @@ class _Tree:
                         if ind in used_indices:
                             num+=(1<<j)
                     self.new_cat_threshold.append(num)
-        self.new_cat_boundaries='cat_boundaries='+' '.join(map(str, self.new_cat_boundaries))
-        self.new_cat_threshold='cat_threshold='+ ' '.join(map(str, self.new_cat_threshold))
+        if self.cat_boundaries is not None:
+            self.new_cat_boundaries='cat_boundaries='+' '.join(map(str, self.new_cat_boundaries))
+        if self.new_cat_threshold is not None:
+            self.new_cat_threshold='cat_threshold='+ ' '.join(map(str, self.new_cat_threshold))
