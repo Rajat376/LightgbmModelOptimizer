@@ -37,15 +37,18 @@ class Optimizer:
                 Trees.append(_Tree(index,
                                   tree_content['split_feature'],
                                   tree_content['threshold'],
-                                  tree_content['cat_boundaries'],
+                                  tree_content.get('cat_boundaries',None),
                                   tree_content['decision_type'],
-                                  tree_content['cat_threshold'],
+                                  tree_content.get('cat_threshold',None),
                                   tree_content['num_feature']
                                   )
                              )
             else :
-                if line.startswith('[categorical_feature:'):
-                    cat_ids = [int(x.strip()) for x in line.strip()[len("[categorical_feature:"):-1].split(",")]
+                if line.startswith('[categorical_feature:') :
+                    if line.strip() == "[categorical_feature: ]":
+                        cat_ids = []
+                    else:
+                        cat_ids = [int(x.strip()) for x in line.strip()[len("[categorical_feature:"):-1].split(",")]
                 elif line.startswith("pandas_categorical"):
                     pandas_categorical=json.loads(line[len("pandas_categorical:"):])
                 elif line.startswith("max_feature_idx"):
