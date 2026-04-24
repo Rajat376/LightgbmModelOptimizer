@@ -70,3 +70,8 @@ class _Tree:
             self.new_cat_boundaries='cat_boundaries='+' '.join(map(str, self.new_cat_boundaries))
         if self.new_cat_threshold is not None:
             self.new_cat_threshold='cat_threshold='+ ' '.join(map(str, self.new_cat_threshold))
+        del self.split_feature, self.threshold, self.decision_type, self.num_feature
+        if self.cat_boundaries is not None:
+            del self.cat_boundaries
+        if self.cat_threshold is not None:
+            del self.cat_threshold
